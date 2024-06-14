@@ -2,8 +2,8 @@ import axios from 'axios';
 import cron from 'node-cron';
 import { writeFileSync } from 'fs';
 
-const LOCATION = 'Ibaraki';
-const WEATHER_API_KEY = 'weather_key';
+const LOCATION = 'Tsukuba';
+const WEATHER_API_KEY = '-------------';
 const LINE_API_KEY = 'line_key';
 
 async function getWeather() {
@@ -16,8 +16,11 @@ async function getWeather() {
         lang: 'ja'
       }
     });
+    return response.data;
   } catch (error) {
     console.error('Error fetching weather data:', error);
     return null;
   }
 }
+
+getWeather().then(data => console.log(data));
