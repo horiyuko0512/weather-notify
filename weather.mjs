@@ -3,8 +3,8 @@ import cron from 'node-cron';
 import { writeFileSync } from 'fs';
 
 const LOCATION = 'Tsukuba';
-const WEATHER_API_KEY = '-------------';
-const LINE_API_KEY = 'line_key';
+const WEATHER_API_KEY = '-----------------';
+const LINE_API_KEY = '-----------------';
 
 async function getWeather() {
   try {
@@ -36,6 +36,8 @@ async function sendLineMessage(message) {
       }
     });
   } catch (error) {
-    console.error('Error sending LINE message:', error);
+    console.error('Error sending LINE message:', error.response ? error.response.data : error.message);
   }
 }
+
+sendLineMessage('Hello, LINE!');
