@@ -23,4 +23,19 @@ async function getWeather() {
   }
 }
 
-getWeather().then(data => console.log(data));
+//getWeather().then(data => console.log(data));
+
+async function sendLineMessage(message) {
+  try {
+    await axios.post('https://notify-api.line.me/api/notify', null, {
+      headers:{
+        Authorization: `Bearer ${LINE_API_KEY}` 
+      },
+      params: {
+        message
+      }
+    });
+  } catch (error) {
+    console.error('Error sending LINE message:', error);
+  }
+}
