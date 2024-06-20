@@ -1,6 +1,5 @@
 import axios from 'axios';
 import cron from 'node-cron';
-import { writeFileSync } from 'fs';
 
 const LOCATION = 'Tsukuba';
 const WEATHER_API_KEY = '-----------------';
@@ -23,8 +22,6 @@ async function getWeather() {
   }
 }
 
-//getWeather().then(data => console.log(data));
-
 async function sendLineMessage(message) {
   try {
     await axios.post('https://notify-api.line.me/api/notify', null, {
@@ -36,8 +33,31 @@ async function sendLineMessage(message) {
       }
     });
   } catch (error) {
-    console.error('Error sending LINE message:', error.response ? error.response.data : error.message);
+    console.error('Error sending LINE message:', error);
   }
 }
 
-sendLineMessage('Hello, LINE!');
+async function checkWeather() {
+  const weatherData = await getWeather();
+  if (!weatherData) {
+    return;
+  }
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const tomorrowStr = tomorrow.toISOString().split('T')[0];
+  const tomorrowForecast = weatherData.list.filter(forecast => forecast.dt_txt.startsWith(tomorrowStr));
+  if (!tomorrowForecast) {
+    console.error('No weather data available for tomorrow');
+    return;
+  }
+  const forecastMessage = tomorrowForecast.map(forecast => {
+    const time = forecast.dt_txt.split(' ')[1];
+    const weather = forecast.weather[0].description;
+    const temp = forecast.main.temp;
+    return `${time}: ${weather}, ${temp}度`;
+  }).join('\n');
+  const message = `${LOCATION}市の明日の天気予報です。\n${forecastMessage}`;
+  await sendLineMessage(message);  
+}
+
+checkWeather();
