@@ -26,7 +26,7 @@ async function sendLineMessage(message) {
   try {
     await axios.post('https://notify-api.line.me/api/notify', null, {
       headers:{
-        Authorization: `Bearer ${LINE_API_KEY}` 
+        Authorization: `Bearer ${LINE_API_KEY}`
       },
       params: {
         message
@@ -57,7 +57,7 @@ async function checkWeather() {
     return `${time}: ${weather}, ${temp}度`;
   }).join('\n');
   const message = `${LOCATION}市の明日の天気予報です。\n${forecastMessage}`;
-  await sendLineMessage(message);  
+  await sendLineMessage(message);
 }
 
 checkWeather();
