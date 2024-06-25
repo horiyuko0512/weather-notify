@@ -37,6 +37,19 @@ async function sendLineMessage(message) {
   }
 }
 
+function checkLaundry(forecast) {
+  const rainThreshold = 0.3;
+  const startHour = 9;
+  const endHour = 15;
+  const LaundryHours = forecast.filter(entry => {
+    const hour = new Date(entry.dt_txt).getHours();
+    const rainPop = entry.pop;
+    const weather = entry.weather[0].main.toLowerCase();
+    return hour >= startHour && hour <= endHour && rainPop <= rainThreshold && !weather.includes('rain');
+  });
+  return LaundryHours.length === (endHour - startHour);
+}
+
 async function checkWeather() {
   const weatherData = await getWeather();
   if (!weatherData) {
@@ -51,12 +64,14 @@ async function checkWeather() {
     return;
   }
   const forecastMessage = tomorrowForecast.map(forecast => {
-    const time = forecast.dt_txt.split(' ')[1];
+    const time = forecast.dt_txt.split(' ')[1].slice(0, 5);
     const weather = forecast.weather[0].description;
     const temp = forecast.main.temp;
-    return `${time}: ${weather}, ${temp}度`;
+    const pop = Math.round(forecast.pop * 100);
+    return `${time}\n${weather}, ${temp}度, 降水確率${pop}%\n------------------------------`;
   }).join('\n');
-  const message = `${LOCATION}市の明日の天気予報です。\n${forecastMessage}`;
+  const laundryMessage = checkLaundry(tomorrowForecast) ? '洗濯日和です！' : '洗濯日和ではありません。';
+  const message = `${LOCATION}市の明日の天気予報です。\n${forecastMessage}\n\n${laundryMessage}`;
   await sendLineMessage(message);
 }
 
