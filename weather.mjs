@@ -75,4 +75,6 @@ async function checkWeather() {
   await sendLineMessage(message);
 }
 
-checkWeather();
+cron.schedule('0 21 * * *', () => {
+  checkWeather();
+});
