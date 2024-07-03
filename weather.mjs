@@ -39,15 +39,14 @@ async function sendLineMessage(message) {
 
 function checkLaundry(forecast) {
   const rainThreshold = 0.3;
-  const startHour = 9;
-  const endHour = 15;
+  const targetHour = [9, 12, 15];
   const LaundryHours = forecast.filter(entry => {
     const hour = new Date(entry.dt_txt).getHours();
     const rainPop = entry.pop;
     const weather = entry.weather[0].main.toLowerCase();
-    return hour >= startHour && hour <= endHour && rainPop <= rainThreshold && !weather.includes('rain');
+    return targetHour.includes(hour) && rainPop <= rainThreshold && !weather.includes('rain');
   });
-  return LaundryHours.length === (endHour - startHour);
+  return LaundryHours.length === targetHour.length;
 }
 
 async function checkWeather() {
