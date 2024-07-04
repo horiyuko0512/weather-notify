@@ -1,10 +1,12 @@
 import axios from 'axios';
 import cron from 'node-cron';
+import dotenv from 'dotenv';
 
-const LOCATION = 'Tsukuba';
+dotenv.config();
+const LOCATION = process.env.LOCATION;
 const WEATHER_API_KEY = '-----------------';
 const LINE_API_KEY = '-----------------';
-const TIME_DIFFERENCE = 9;
+const TIME_DIFFERENCE = parseInt(process.env.TIME_DIFFERENCE);
 
 async function getWeather() {
   try {
