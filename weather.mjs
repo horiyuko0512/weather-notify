@@ -4,8 +4,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 const LOCATION = process.env.LOCATION;
-const WEATHER_API_KEY = '-----------------';
-const LINE_API_KEY = '-----------------';
+const WEATHER_API_KEY = process.env.WEATHER_API_KEY;
+const LINE_API_KEY = process.env.LINE_API_KEY;
 const TIME_DIFFERENCE = parseInt(process.env.TIME_DIFFERENCE);
 
 async function getWeather() {
