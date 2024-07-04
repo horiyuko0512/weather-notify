@@ -4,6 +4,7 @@ import cron from 'node-cron';
 const LOCATION = 'Tsukuba';
 const WEATHER_API_KEY = '-----------------';
 const LINE_API_KEY = '-----------------';
+const TIME_DIFFERENCE = 9;
 
 async function getWeather() {
   try {
@@ -41,7 +42,9 @@ function checkLaundry(forecast) {
   const rainThreshold = 0.3;
   const targetHour = [9, 12, 15];
   const LaundryHours = forecast.filter(entry => {
-    const hour = new Date(entry.dt_txt).getHours();
+    const date = new Date(entry.dt * 1000); // Unix timestampをDateオブジェクトに変換
+    date.setHours(date.getHours() + TIME_DIFFERENCE);
+    const hour = date.getHours();
     const rainPop = entry.pop;
     const weather = entry.weather[0].main.toLowerCase();
     return targetHour.includes(hour) && rainPop <= rainThreshold && !weather.includes('rain');
@@ -56,18 +59,24 @@ async function checkWeather() {
   }
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(tomorrow.getHours() + TIME_DIFFERENCE);
   const tomorrowStr = tomorrow.toISOString().split('T')[0];
-  const tomorrowForecast = weatherData.list.filter(forecast => forecast.dt_txt.startsWith(tomorrowStr));
+  const tomorrowForecast = weatherData.list.filter(forecast => {
+    const forecastDate = new Date(forecast.dt * 1000); // Unix timestampをDateオブジェクトに変換
+    forecastDate.setHours(forecastDate.getHours() + TIME_DIFFERENCE);
+    return forecastDate.toISOString().split('T')[0] === tomorrowStr;
+  });
   if (!tomorrowForecast) {
     console.error('No weather data available for tomorrow');
     return;
   }
   const forecastMessage = tomorrowForecast.map(forecast => {
-    const time = forecast.dt_txt.split(' ')[1].slice(0, 5);
+    const time = new Date(forecast.dt * 1000); // Unix timestampをDateオブジェクトに変換
+    const timeStr = time.toTimeString().slice(0, 5);
     const weather = forecast.weather[0].description;
     const temp = forecast.main.temp;
-    const pop = Math.round(forecast.pop * 100);
-    return `${time}\n${weather}, ${temp}度, 降水確率${pop}%\n------------------------------`;
+    const pop = Math.round(forecast.pop * 100); //%表示
+    return `${timeStr}\n${weather}, ${temp}度, 降水確率${pop}%\n------------------------------`;
   }).join('\n');
   const laundryMessage = checkLaundry(tomorrowForecast) ? '洗濯日和です！' : '洗濯日和ではありません。';
   const message = `${LOCATION}市の明日の天気予報です。\n${forecastMessage}\n\n${laundryMessage}`;
