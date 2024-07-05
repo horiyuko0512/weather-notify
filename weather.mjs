@@ -42,16 +42,22 @@ async function sendLineMessage(message) {
 
 function checkLaundry(forecast) {
   const rainThreshold = 0.3;
-  const targetHour = [9, 12, 15];
-  const LaundryHours = forecast.filter(entry => {
+  const targetHours = [9, 12, 15];
+  const hourlyLaundryStatus = Array(targetHours.length).fill(true);
+  forecast.forEach(entry => {
     const date = new Date(entry.dt * 1000); // Unix timestampをDateオブジェクトに変換
-    date.setHours(date.getHours() + TIME_DIFFERENCE);
     const hour = date.getHours();
-    const rainPop = entry.pop;
-    const weather = entry.weather[0].main.toLowerCase();
-    return targetHour.includes(hour) && rainPop <= rainThreshold && !weather.includes('rain');
+    const index = targetHours.indexOf(hour);
+    if (index !== -1) {
+      const rainPop = entry.pop;
+      const weather = entry.weather[0].main.toLowerCase();
+      if (rainPop > rainThreshold || weather.includes('rain')) {
+        hourlyLaundryStatus[index] = false;
+      }
+    }
   });
-  return LaundryHours.length === targetHour.length;
+  const isLaundryDay = hourlyLaundryStatus.every(status => status);
+  return isLaundryDay;
 }
 
 async function checkWeather() {
