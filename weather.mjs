@@ -65,6 +65,7 @@ async function checkWeather() {
   if (!weatherData) {
     return;
   }
+  const cityName = weatherData.city.name;
   const tomorrow = new Date();
   tomorrow.setDate(tomorrow.getDate() + 1);
   tomorrow.setHours(tomorrow.getHours() + TIME_DIFFERENCE);
@@ -82,12 +83,12 @@ async function checkWeather() {
     const time = new Date(forecast.dt * 1000); // Unix timestampをDateオブジェクトに変換
     const timeStr = time.toTimeString().slice(0, 5);
     const weather = forecast.weather[0].description;
-    const temp = forecast.main.temp;
+    const temp = Math.round(forecast.main.temp);
     const pop = Math.round(forecast.pop * 100); //%表示
     return `${timeStr}\n${weather}, ${temp}度, 降水確率${pop}%\n------------------------------`;
   }).join('\n');
   const laundryMessage = checkLaundry(tomorrowForecast) ? '洗濯日和です！' : '洗濯日和ではありません。';
-  const message = `${LOCATION}市の明日の天気予報です。\n${forecastMessage}\n\n${laundryMessage}`;
+  const message = `${cityName}の明日の天気予報です。\n${forecastMessage}\n\n${laundryMessage}`;
   await sendLineMessage(message);
 }
 
