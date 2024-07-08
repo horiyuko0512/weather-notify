@@ -7,7 +7,7 @@ export default async function header(req, res) {
 
   try {
     await checkWeather();
-    res.status(200).json({ message: 'Weather check completed' });
+    res.status(200).json({ message: 'Weather check completed!' });
   } catch (error) {
     console.error('Error in checkWeather:', error);
     res.status(500).json({ error: 'Internal server error' });
