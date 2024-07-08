@@ -1,5 +1,4 @@
 import axios from 'axios';
-import cron from 'node-cron';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -60,7 +59,7 @@ function checkLaundry(forecast) {
   return isLaundryDay;
 }
 
-async function checkWeather() {
+export async function checkWeather() {
   const weatherData = await getWeather();
   if (!weatherData) {
     return;
@@ -91,7 +90,3 @@ async function checkWeather() {
   const message = `${cityName}の明日の天気予報です。\n${forecastMessage}\n\n${laundryMessage}`;
   await sendLineMessage(message);
 }
-
-cron.schedule('0 21 * * *', () => {
-  checkWeather();
-});
