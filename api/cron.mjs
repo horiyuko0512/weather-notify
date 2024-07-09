@@ -1,5 +1,5 @@
 import { checkWeather } from "../src/weather.mjs";
-import { dotenv } from "../src/dotenv.mjs";
+import dotenv from 'dotenv';
 
 dotenv.config();
 export default async function header(req, res) {
