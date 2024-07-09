@@ -8,7 +8,7 @@
 
   "builds": [
     {
-      "src": "api/cron.mjs",
+      "src": "/api/cron.mjs",
       "use": "@vercel/node"
     }
   ]
