@@ -3,10 +3,8 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 export default async function handler(req, res) {
-  const receivedToken = req.headers.authorization;
-  const expectedToken = `Bearer ${process.env.CRON_TOKEN}`;
-  if (receivedToken !== expectedToken) {
-    console.error('Authorization failed', { receivedToken, expectedToken });
+  const authHeader = req.headers.authorization;
+  if (!process.env.CRON_SECRET || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
