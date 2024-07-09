@@ -1,5 +1,7 @@
 import { checkWeather } from "../src/weather.mjs";
+import { dotenv } from "../src/dotenv.mjs";
 
+dotenv.config();
 export default async function header(req, res) {
   if (req.headers.authorization !== `Bearer ${process.env.CRON_SECRET}`) {
     return res.status(401).json({ error: 'Unauthorized' });
