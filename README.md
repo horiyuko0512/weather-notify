@@ -7,7 +7,8 @@ VercelとNode.jsを用いて、毎日自動で明日の天気予報と洗濯で�
 - 天気予報の取得: OpenWeather APIを使用して、指定された地域の天気予報を取得します。
 - 洗濯日和の判定: 取得した天気予報データをもとに、翌日が洗濯に適しているかを判定します。
 - LINE通知: 判定結果と天気予報をLINE Notify APIを用いてLINEに通知します。
-![スクリーンショット 2023-10-04 152451](https://github.com/horiyuko0512/weather-notify/assets/159997803/6675b082-0319-479e-be5b-95d12515f56c)
+
+![スクリーンショット 2024-07-12 001346(2)](https://github.com/horiyuko0512/weather-notify/assets/159997803/a9c83e17-03ef-4209-8a47-72f4e7d3d1aa)
 
 ## Prerequisites
 - Node.js
