@@ -80,6 +80,7 @@ export async function checkWeather() {
   }
   const forecastMessage = tomorrowForecast.map(forecast => {
     const time = new Date(forecast.dt * 1000); // Unix timestampをDateオブジェクトに変換
+    time.setHours(time.getHours() + TIME_DIFFERENCE);
     const timeStr = time.toTimeString().slice(0, 5);
     const weather = forecast.weather[0].description;
     const temp = Math.round(forecast.main.temp);
