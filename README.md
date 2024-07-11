@@ -1,7 +1,7 @@
 # Weather Notify
 
 ## Overview
-VercelとNode.jsを用いて、毎日自動で明日の天気予報と洗濯できるかどうかをLINEに通知するシステムです。このシステムはOpenWeather APIを使用し、指定された場所の天気予報を取得し、その情報をもとにLINEに通知をします。
+Node.jsとVercelを用いて、コードを手動で実行しなくても、毎日自動で明日の天気予報と洗濯できるかどうかをLINEに通知するシステムです。このシステムはOpenWeather APIを使用し、指定された場所の天気予報を取得し、その情報をもとにLINEに通知をします。
 
 ## Function
 - 天気予報の取得: OpenWeather APIを使用して、指定された地域の天気予報を取得します。
