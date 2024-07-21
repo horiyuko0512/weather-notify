@@ -45,6 +45,7 @@ function checkLaundry(forecast) {
   const hourlyLaundryStatus = Array(targetHours.length).fill(true);
   forecast.forEach(entry => {
     const date = new Date(entry.dt * 1000); // Unix timestampをDateオブジェクトに変換
+    date.setHours(date.getHours() + TIME_DIFFERENCE);
     const hour = date.getHours();
     const index = targetHours.indexOf(hour);
     if (index !== -1) {
